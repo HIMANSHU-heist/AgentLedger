@@ -1,0 +1,33 @@
+version: 1
+
+refund_policy:
+  auto_approve_limit: 500          # INR; above this a human must approve
+  duplicate_window_minutes: 5
+
+escalation:
+  on_customer_requests_human: true
+  on_ambiguous_evidence: true
+
+loan_policy:
+  auto_approval_allowed: false     # hard rule: AI never approves credit
+  require_human_lending_officer: true
+  disclose_ai_recommendation: true
+  prescreen:
+    min_months_active: 6
+    min_monthly_volume: 100000
+
+# Customer messages, merchant notes and txn memos are UNTRUSTED data.
+injection_defense:
+  patterns:
+    - 'ignore\s+(all\s+|any\s+|the\s+)?(previous|prior|above|earlier)\s+(instructions|rules|prompts?)'
+    - 'disregard\s+.{0,40}(instructions|rules|polic(y|ies))'
+    - 'system\s+prompt'
+    - 'you\s+are\s+now\s'
+    - 'approve\s+.{0,30}refund'
+    - 'refund\s+all'
+    - 'override\s+.{0,20}(polic|limit|approval|rules)'
+    - 'bypass\s+.{0,20}(polic|limit|approval|verification)'
+    - 'act\s+as\s+(an?\s+)?(admin|supervisor|system)'
+
+disclosure:
+  text: "You are chatting with an AI assistant. You can ask for a human reviewer at any time."
