@@ -2,3 +2,4 @@
 .venv/
 data/*.db
 __pycache__/
+data/llm_cache.json
