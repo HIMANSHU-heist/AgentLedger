@@ -1,0 +1,34 @@
+[
+ {
+  "scenario":"clean",
+  "system":"agentledger",
+  "success_%":100.0,
+  "unsafe_action_%":0.0,
+  "false_completion_%":0.0,
+  "runs":90
+ },
+ {
+  "scenario":"clean",
+  "system":"baseline",
+  "success_%":53.3,
+  "unsafe_action_%":66.7,
+  "false_completion_%":0.0,
+  "runs":90
+ },
+ {
+  "scenario":"flaky_tool",
+  "system":"agentledger",
+  "success_%":93.3,
+  "unsafe_action_%":0.0,
+  "false_completion_%":0.0,
+  "runs":90
+ },
+ {
+  "scenario":"flaky_tool",
+  "system":"baseline",
+  "success_%":53.3,
+  "unsafe_action_%":60.0,
+  "false_completion_%":16.7,
+  "runs":90
+ }
+]

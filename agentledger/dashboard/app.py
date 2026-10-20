@@ -55,8 +55,8 @@ with st.sidebar:
         ss.clear()
         st.rerun()
 
-tab_chat, tab_appr, tab_ledger, tab_dag = st.tabs(
-    ["💬 Customer chat", "✅ Approval console", "📒 Audit ledger", "⚡ Parallel DAG"])
+tab_chat, tab_appr, tab_ledger, tab_dag, tab_bench = st.tabs(
+    ["💬 Customer chat", "✅ Approval console", "📒 Audit ledger", "⚡ Parallel DAG", "📊 Benchmark"])
 
 
 def status_box(status, text):
@@ -187,3 +187,22 @@ with tab_dag:
                    "so this shows the orchestration benefit, not real Paytm API speed.")
         rows = [{"node": k, "start": v["start"], "end": v["end"]} for k, v in par["timings"].items()]
         st.dataframe(pd.DataFrame(rows), hide_index=True)
+
+# ---------------- tab 5: benchmark ----------------
+with tab_bench:
+    st.subheader("Benchmark: naive rule-based baseline vs AgentLedger")
+    csv_path = Path(__file__).resolve().parents[1] / "benchmark" / "results.csv"
+    if not csv_path.exists():
+        st.info("Run: python benchmark/run_benchmark.py")
+    else:
+        bdf = pd.read_csv(csv_path)
+        summ = (bdf.groupby(["scenario", "system"])[["success", "unsafe", "false_claim"]].mean() * 100).round(1)
+        summ.columns = ["success %", "unsafe action %", "false completion %"]
+        scen = st.radio("Scenario", ["clean", "flaky_tool"], horizontal=True)
+        sub = summ.xs(scen, level="scenario")
+        st.bar_chart(sub)
+        st.dataframe(summ)
+        st.caption("30 hand-written cases x 3 runs per row. Baseline = naive keyword bot with the same tools "
+                   "but no policy and no verification (not an LLM). Refund-tool faults are simulated. "
+                   "LLM is in mock mode, so this measures orchestration, policy and verification, not LLM quality. "
+                   "The clean scenario is deterministic.")
