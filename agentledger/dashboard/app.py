@@ -85,9 +85,9 @@ with tab_chat:
         intent = I.classify_intent(msg)
         txn_id = intent["txn_id"]
         if not txn_id:
-            st.warning("Message madhe transaction ID (jase TXN8822) pahije.")
+            st.warning("Please include a transaction ID (e.g. TXN8822) in the message.")
         elif intent["intent"] in ("LOAN_INQUIRY", "SETTLEMENT_DELAY"):
-            st.info(f"Intent {intent['intent']}: ha flow MVP madhe nahi. Human la pathavla jail.")
+            st.info(f"Intent {intent['intent']}: this flow is not in the MVP; it would be routed to a human.")
         else:
             with st.spinner("Orchestrating..."):
                 r = orch.process_refund_request_sync(
@@ -170,7 +170,7 @@ with tab_ledger:
     chain = ledger.verify_chain()
     (st.success if chain.get("ok") else st.error)(f"Chain verification: {chain}")
     if not task_id:
-        st.caption("Pahile Customer chat madhe ek case chalav.")
+        st.caption("Run a case in the Customer chat tab first.")
 
 # ---------------- tab 4: DAG ----------------
 with tab_dag:
