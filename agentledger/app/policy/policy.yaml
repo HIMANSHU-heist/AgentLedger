@@ -1,7 +1,7 @@
 version: 1
 
 refund_policy:
-  auto_approve_limit: 500          # INR; above this a human must approve
+  auto_approve_limit: 5000         # INR; above this a human must approve
   duplicate_window_minutes: 5
 
 escalation:

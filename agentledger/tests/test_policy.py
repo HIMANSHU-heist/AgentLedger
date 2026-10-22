@@ -25,14 +25,14 @@ def test_injection_scan_dirty(eng):
 
 
 def test_double_debit_above_limit_needs_human(eng):
-    d = eng.decide_refund(**build_context("TXN8822"))
+    d = eng.decide_refund(**build_context("TXN9402"))
     assert d.outcome == HUMAN_APPROVAL and d.requires_human
-    assert d.details["target_txn_id"] == "TXN8822" and "REF-HUMAN" in d.rules
+    assert d.details["target_txn_id"] == "TXN9402" and "REF-HUMAN" in d.rules
 
 
 def test_double_debit_targets_the_duplicate_from_either_side(eng):
-    d = eng.decide_refund(**build_context("TXN8821"))   # customer quotes the ORIGINAL txn
-    assert d.details["target_txn_id"] == "TXN8822"
+    d = eng.decide_refund(**build_context("TXN9401"))   # customer quotes the ORIGINAL txn
+    assert d.details["target_txn_id"] == "TXN9402"
 
 
 def test_small_double_debit_auto_approved(eng):
@@ -41,7 +41,7 @@ def test_small_double_debit_auto_approved(eng):
 
 
 def test_failed_payment_above_limit_needs_human(eng):
-    d = eng.decide_refund(**build_context("TXN9001"))
+    d = eng.decide_refund(**build_context("TXN9002"))
     assert d.outcome == HUMAN_APPROVAL and d.details["evidence"] == "FAILED_PAYMENT_DEBITED"
 
 
@@ -72,8 +72,8 @@ def test_requested_amount_above_txn_blocked(eng):
 
 def test_policy_is_code_not_prompt():
     p = load_policy()
-    p["refund_policy"]["auto_approve_limit"] = 5000
-    d = PolicyEngine(p).decide_refund(**build_context("TXN8822"))
+    p["refund_policy"]["auto_approve_limit"] = 50000
+    d = PolicyEngine(p).decide_refund(**build_context("TXN9402"))
     assert d.outcome == AUTO_APPROVE      # same case, only the YAML changed
 
 
@@ -85,3 +85,18 @@ def test_loan_always_human_even_if_recommended(eng):
 def test_loan_not_recommended_still_human(eng):
     d = eng.decide_loan(T.get_merchant_profile("M004"))
     assert d.outcome == HUMAN_APPROVAL and d.details["recommendation"] == "NOT_RECOMMENDED"
+
+
+@pytest.mark.parametrize("t", ["TXN8821", "TXN8822", "TXN9102", "TXN9501", "TXN9502", "TXN9503", "TXN9504"])
+def test_double_debits_up_to_5000_are_auto(eng, t):
+    assert eng.decide_refund(**build_context(t)).outcome == AUTO_APPROVE
+
+
+@pytest.mark.parametrize("t", ["TXN9001", "TXN9005", "TXN9006"])
+def test_failed_payments_up_to_5000_are_auto(eng, t):
+    assert eng.decide_refund(**build_context(t)).outcome == AUTO_APPROVE
+
+
+@pytest.mark.parametrize("t", ["TXN9401", "TXN9402", "TXN9002"])
+def test_above_5000_needs_human(eng, t):
+    assert eng.decide_refund(**build_context(t)).outcome == HUMAN_APPROVAL

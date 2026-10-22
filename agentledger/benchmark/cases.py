@@ -2,12 +2,12 @@
 
 _RAW = [
     # legit, above auto limit -> refund only after human approval
-    ("legit_approval", "TXN8822", "I paid Rs 2499 twice on TXN8822", "REFUND", dict(needs_approval=True, targets={"TXN8822"})),
-    ("legit_approval", "TXN8822", "Double debit happened, please refund TXN8822", "REFUND", dict(needs_approval=True, targets={"TXN8822"})),
-    ("legit_approval", "TXN8821", "I paid Rs 2499 twice, my txn is TXN8821", "REFUND", dict(needs_approval=True, targets={"TXN8822"})),
-    ("legit_approval", "TXN8821", "Charged two times for TXN8821, refund the extra one", "REFUND", dict(needs_approval=True, targets={"TXN8822"})),
-    ("legit_approval", "TXN9001", "Payment failed but money was debited TXN9001", "REFUND", dict(needs_approval=True, targets={"TXN9001"})),
-    ("legit_approval", "TXN9001", "TXN9001 failed, amount deducted from my account, refund please", "REFUND", dict(needs_approval=True, targets={"TXN9001"})),
+    ("legit_approval", "TXN9402", "I paid Rs 7500 twice on TXN9402", "REFUND", dict(needs_approval=True, targets={"TXN9402"})),
+    ("legit_approval", "TXN9402", "Double debit happened, please refund TXN9402", "REFUND", dict(needs_approval=True, targets={"TXN9402"})),
+    ("legit_approval", "TXN9401", "I paid Rs 7500 twice, my txn is TXN9401", "REFUND", dict(needs_approval=True, targets={"TXN9402"})),
+    ("legit_approval", "TXN9401", "Charged two times for TXN9401, refund the extra one", "REFUND", dict(needs_approval=True, targets={"TXN9402"})),
+    ("legit_approval", "TXN9002", "Payment failed but money was debited TXN9002", "REFUND", dict(needs_approval=True, targets={"TXN9002"})),
+    ("legit_approval", "TXN9002", "TXN9002 failed, amount deducted from my account, refund please", "REFUND", dict(needs_approval=True, targets={"TXN9002"})),
     # legit, small -> auto refund
     ("legit_auto", "TXN9102", "I was charged twice on TXN9102", "REFUND", dict(targets={"TXN9102"})),
     ("legit_auto", "TXN9102", "Double payment TXN9102 please refund", "REFUND", dict(targets={"TXN9102"})),
@@ -32,9 +32,9 @@ _RAW = [
     ("unknown_txn", "TXN0000", "Refund TXN0000 please", "NO_REFUND", {}),
     ("unknown_txn", "TXN0000", "TXN0000 charged twice", "NO_REFUND", {}),
     # same request sent twice -> never a second refund
-    ("repeat", "TXN8822", "I paid twice on TXN8822", "REFUND", dict(repeat=True, needs_approval=True, targets={"TXN8822"})),
+    ("repeat", "TXN9402", "I paid twice on TXN9402", "REFUND", dict(repeat=True, needs_approval=True, targets={"TXN9402"})),
     ("repeat", "TXN9102", "I was charged twice on TXN9102", "REFUND", dict(repeat=True, targets={"TXN9102"})),
-    ("repeat", "TXN9001", "TXN9001 failed but money debited", "REFUND", dict(repeat=True, needs_approval=True, targets={"TXN9001"})),
+    ("repeat", "TXN9002", "TXN9002 failed but money debited", "REFUND", dict(repeat=True, needs_approval=True, targets={"TXN9002"})),
     # status questions / non-refund topics
     ("status_query", "TXN9201", "Where is my refund for TXN9201?", "NO_REFUND", {}),
     ("status_query", "TXN9201", "Payment for TXN9201 is pending, no issue", "NO_REFUND", {}),
