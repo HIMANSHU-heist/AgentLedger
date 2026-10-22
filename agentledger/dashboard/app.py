@@ -67,7 +67,7 @@ header[data-testid="stHeader"]{background:transparent;height:2.6rem}
 """
 st.markdown(CSS, unsafe_allow_html=True)
 
-if not Path(db.DB_PATH).exists():
+if db.needs_seed():
     db.init_db(reset=True)
 
 ss = st.session_state

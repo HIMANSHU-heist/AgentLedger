@@ -143,6 +143,19 @@ def init_db(reset: bool = False) -> None:
     conn.close()
 
 
+def needs_seed() -> bool:
+    """True if the DB is missing or does not contain every seed transaction (stale DB)."""
+    if not DB_PATH.exists():
+        return True
+    try:
+        c = get_conn()
+        have = {r[0] for r in c.execute("SELECT txn_id FROM transactions")}
+        c.close()
+        return not {t[0] for t in TRANSACTIONS} <= have
+    except Exception:
+        return True
+
+
 if __name__ == "__main__":
     init_db(reset="--reset" in sys.argv)
     print(f"DB ready at {DB_PATH}")
